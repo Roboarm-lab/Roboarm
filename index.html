@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progetto RoboArm | L'Automazione Accessibile</title>
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-color: #FF6600;
+            --glass: rgba(0, 0, 0, 0.7);
+            --transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--accent-color); }
+
+        /* --- Typography --- */
+        h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(3rem, 8vw, 5rem); line-height: 1.1; }
+        h2 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 40px; }
+        p { color: var(--text-muted); font-size: 1.2rem; max-width: 800px; margin: 0 auto 20px; }
+
+        /* --- Components --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        
+        .btn {
+            display: inline-block;
+            padding: 18px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin: 10px;
+            cursor: pointer;
+        }
+        .btn-primary { background-color: var(--accent-color); color: #000; box-shadow: 0 10px 20px rgba(255, 102, 0, 0.2); }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(255, 102, 0, 0.4); }
+        .btn-secondary { border: 2px solid var(--text-color); color: var(--text-color); }
+        .btn-secondary:hover { background-color: var(--text-color); color: #000; }
+
+        /* --- Scroll Reveal Animations --- */
+        .reveal { opacity: 0; transform: translateY(50px); transition: var(--transition); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- Hero Section --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 80px; }
+        .hero-img-container { width: 100%; max-width: 800px; height: 400px; margin: 40px 0; overflow: hidden; border-radius: 20px; }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.1s ease-out; }
+
+        /* --- Video Section --- */
+        .video-section { padding: 100px 20px; }
+        .video-wrapper { 
+            width: 90%; max-width: 900px; height: 500px; background: #111; margin: 0 auto; 
+            border-radius: 20px; display: flex; align-items: center; justify-content: center; 
+            border: 1px solid #333; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden; /* Ensures video doesn't overflow container */
+        }
+        .video-wrapper.active { width: 100%; }
+        .play-btn { width: 80px; height: 80px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s; }
+        .play-btn:hover { transform: scale(1.1); }
+
+        /* --- Grid Layouts --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: left; }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .spec-card { background: #0a0a0a; padding: 40px; border-radius: 20px; border: 1px solid #222; transition: var(--transition); }
+        .spec-card:hover { transform: translateY(-10px); border-color: var(--accent-color); }
+
+        /* --- Use Cases --- */
+        .use-case { display: flex; align-items: center; gap: 50px; margin-bottom: 100px; }
+        .use-case:nth-child(even) { flex-direction: row-reverse; }
+        .use-case img { width: 400px; height: 300px; border-radius: 20px; background: #222; object-fit: cover; }
+        
+        /* --- Team --- */
+        .team-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 50px; }
+        .member { text-align: center; transition: var(--transition); }
+        .member img { width: 150px; height: 150px; border-radius: 50%; background: #333; margin-bottom: 15px; object-fit: cover; }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .grid-2, .use-case { grid-template-columns: 1fr; flex-direction: column; text-align: center; }
+            .use-case img { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">ROBOARM</div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 class="reveal">RoboArm: L'Automazione con Arduino</h1>
+        <p class="reveal">Il futuro della robotica accessibile. Potente, open-source, rivoluzionario.</p>
+        
+        <!-- PLACEHOLDER: Replace with a high-res hero shot of the RoboArm on a clean, dark background. -->
+        <!-- Recommended: 1600x900px, format: WebP (for performance). -->
+        <div class="hero-img-container reveal">
+            <img src="" alt="RoboArm" class="hero-img" id="heroImg">
+        </div>
+        <div class="reveal">
+            <a href="#" class="btn btn-primary">Pre-Ordina a <100€</a>
+            <a href="#progetto" class="btn btn-secondary">Scopri il Progetto</a>
+        </div>
+    </section>
+
+    <!-- Video -->
+    <section class="video-section">
+        <div class="container">
+            <h2 class="reveal">Il Futuro in Movimento</h2>
+            
+            <!-- PLACEHOLDER: Replace this div with a <video> tag or <iframe> (YouTube/Vimeo). -->
+            <!-- Recommended: 1080p, cinematic lighting, no audio or soft background music. -->
+            <!-- Example: <video src="video.mp4" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video> -->
+            <div class="video-wrapper reveal" id="videoWrapper">
+                <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;">
+                    <source src="Media/your-video-name.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem & Solution -->
+    <section id="progetto">
+        <div class="container grid-2">
+            <div class="reveal">
+                <h2>Il Problema</h2>
+                <p>L'automazione industriale è costosa. I robot professionali superano spesso i 30.000€, rendendo l'apprendimento e la prototipazione inaccessibili a studenti e piccole realtà.</p>
+            </div>
+            <div class="reveal">
+                <h2>La Soluzione</h2>
+                <p>RoboArm abbatte le barriere. Grazie all'architettura Open Source e componenti economici, offriamo una piattaforma educativa potente a una frazione del costo industriale.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specs -->
+    <section>
+        <div class="container">
+            <h2 class="reveal">Specifiche Tecniche</h2>
+            <div class="specs-grid">
+                <div class="spec-card reveal stagger">
+                    <h3>Cervello</h3>
+                    <p>Basato su Arduino Uno/Mega per la massima compatibilità e facilità di programmazione.</p>
+                </div>
+                <div class="spec-card reveal stagger">
+                    <h3>Movimento</h3>
+                    <p>Sistema a 4-6 servomotori ad alta precisione per movimenti fluidi e controllati.</p>
+                </div>
+                <div class="spec-card reveal stagger">
+                    <h3>Struttura</h3>
+                    <p>Design modulare realizzato in plastica stampata in 3D e plexiglass resistente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section>
+        <div class="container">
+            <h2 class="reveal">Versatilità Quotidiana</h2>
+            
+            <!-- PLACEHOLDER: Replace with a photo of the RoboArm interacting with kitchen tools or food. -->
+            <div class="use-case reveal">
+                <img src="Media/Gemini_Generated_Image_32b11932b11932b1.png" alt="Cucina">
+                <div>
+                    <h3>In Cucina</h3>
+                    <p>Automatizza compiti ripetitivi, dal dosaggio degli ingredienti alla decorazione dei piatti con precisione millimetrica.</p>
+                </div>
+            </div>
+
+            <!-- PLACEHOLDER: Replace with a photo of the RoboArm assisting with a daily task (e.g., picking up a glass). -->
+            <div class="use-case reveal">
+                <img src="Media/Gemini_Generated_Image_uqwh1zuqwh1zuqwh.png" alt="Assistenza">
+                <div>
+                    <h3>Assistenza Disabilità</h3>
+                    <p>Un supporto concreto per la vita quotidiana, aiutando a manipolare oggetti in autonomia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section>
+        <div class="container">
+            <h2 class="reveal">Meet the Creators</h2>
+            <div class="team-grid">
+                <!-- PLACEHOLDER: Replace with professional headshots of the team members. -->
+                <!-- Recommended: 300x300px, circular crop. -->
+                <div class="member reveal stagger">
+                    <img src="https://via.placeholder.com/150/000/FF6600?text=EP" alt="Ergi Petani">
+                    <h3>Ergi Petani</h3>
+                    <p>CEO & Founder</p>
+                </div>
+                <div class="member reveal stagger">
+                    <img src="https://via.placeholder.com/150/000/FF6600?text=MS" alt="Mattia Schianchi">
+                    <h3>Mattia Schianchi</h3>
+                    <p>Business Strategy</p>
+                </div>
+                <div class="member reveal stagger">
+                    <img src="https://via.placeholder.com/150/000/FF6600?text=LD" alt="Lorenzo De Riggi">
+                    <h3>Lorenzo De Riggi</h3>
+                    <p>Product Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid #222; color: #666;">
+        <p>&copy; 2026 Progetto RoboArm. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script>
+        // 1. Intersection Observer for Scroll Reveal
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 2. Staggered Animation Delays
+        document.querySelectorAll('.stagger').forEach((el, i) => {
+            el.style.transitionDelay = `${i * 0.2}s`;
+        });
+
+        // 3. Hero Parallax Effect
+        const heroImg = document.getElementById('heroImg');
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY;
+            if (scroll < 800) {
+                heroImg.style.transform = `translateY(${scroll * 0.2}px) scale(${1 + scroll * 0.0005})`;
+            }
+        });
+
+        // 4. Video Section Scale Effect
+        const videoWrapper = document.getElementById('videoWrapper');
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    videoWrapper.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        videoObserver.observe(videoWrapper);
+    </script>
+</body>
+</html>
